@@ -97,18 +97,38 @@ class RaidGroups {
         // Create header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'group-header';
-        headerDiv.innerHTML = `
-            <h3 class="group-title">Group ${group.group_id}</h3>
-            <div class="group-stats">
-                <div class="stat-badge">
-                    <i class="fas fa-users"></i>
-                    <span>${group.total_members}</span>
-                </div>
-            </div>
+        
+        const titleDiv = document.createElement('h3');
+        titleDiv.className = 'group-title';
+        titleDiv.textContent = `Group ${group.group_id}`;
+        
+        const statsDiv = document.createElement('div');
+        statsDiv.className = 'group-stats';
+        
+        // Create details button
+        const detailsBtn = document.createElement('button');
+        detailsBtn.className = 'group-details-btn';
+        detailsBtn.title = 'View detailed analysis';
+        detailsBtn.innerHTML = '<i class="fas fa-chart-line"></i> Details';
+        detailsBtn.addEventListener('click', () => {
+            openSplitDetailsModal(group, group.group_id, this.currentGroups.length);
+        });
+        
+        // Create member count badge
+        const statBadge = document.createElement('div');
+        statBadge.className = 'stat-badge';
+        statBadge.innerHTML = `
+            <i class="fas fa-users"></i>
+            <span>${group.total_members}</span>
         `;
+        
+        statsDiv.appendChild(detailsBtn);
+        statsDiv.appendChild(statBadge);
+        headerDiv.appendChild(titleDiv);
+        headerDiv.appendChild(statsDiv);
         groupDiv.appendChild(headerDiv);
 
-        // Create info section
+        // Create info section (rest of the method continues as before)
         const infoDiv = document.createElement('div');
         infoDiv.className = 'group-info';
         

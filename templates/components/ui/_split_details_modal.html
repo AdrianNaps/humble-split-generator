@@ -1,0 +1,37 @@
+<!-- Split Details Modal Component -->
+<div class="modal-overlay" id="splitDetailsModal">
+    <div class="modal-container split-details-modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="splitDetailsTitle">Group Details</h3>
+            <button class="modal-close" onclick="closeSplitDetailsModal()" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Composition Section -->
+            <div class="detail-section">
+                <h4 class="detail-section-title">Composition</h4>
+                <div id="compositionDetails" class="composition-text"></div>
+            </div>
+            
+            <!-- Armor Distribution Section -->
+            <div class="detail-section">
+                <h4 class="detail-section-title">Armor Distribution (Mains)</h4>
+                <div id="armorDetails" class="distribution-grid"></div>
+            </div>
+            
+            <!-- Tier Distribution Section -->
+            <div class="detail-section">
+                <h4 class="detail-section-title">Tier Distribution (Mains)</h4>
+                <div id="tierDetails" class="distribution-grid"></div>
+            </div>
+            
+            <!-- Raid Buffs Section -->
+            <div class="detail-section">
+                <h4 class="detail-section-title">Raid Buffs</h4>
+                <div id="raidBuffsDetails" class="raid-buffs-grid"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeSplitDetailsModal()">Close</button>
+        </div>
+    </div>
+</div>

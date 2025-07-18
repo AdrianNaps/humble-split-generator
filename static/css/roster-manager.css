@@ -17,7 +17,7 @@ html, body {
 .sidebar {
     width: 320px;
     background-color: #1a1a1a;
-    color: #ffffff;
+    color: #333;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #333;
@@ -1111,4 +1111,244 @@ html, body {
     .group-container {
         min-width: 100%;
     }
+}
+
+/* ===== SPLIT DETAILS MODAL STYLES (DARK MODE) ===== */
+.split-details-modal {
+    max-width: 700px;
+}
+
+.split-details-modal .modal-container {
+    background: #1a202c;
+    color: #f7fafc;
+}
+
+.split-details-modal .modal-header {
+    border-bottom-color: #4a5568;
+}
+
+.split-details-modal .modal-title {
+    color: #f7fafc;
+}
+
+.split-details-modal .modal-close {
+    color: #cbd5e0;
+}
+
+.split-details-modal .modal-close:hover {
+    background-color: #2d3748;
+    color: #f7fafc;
+}
+
+.split-details-modal .modal-footer {
+    border-top-color: #4a5568;
+}
+
+.detail-section {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #4a5568;
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.detail-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f7fafc;
+    margin: 0 0 12px 0;
+}
+
+/* Composition Section */
+.composition-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+
+.composition-line {
+    margin-bottom: 8px;
+    color: #e2e8f0;
+}
+
+.composition-line strong {
+    color: #4299e1;
+    font-weight: 600;
+}
+
+.mains-count {
+    color: #a0aec0;
+    font-size: 13px;
+}
+
+/* Distribution Grids */
+.distribution-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.distribution-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid;
+}
+
+.distribution-item.good {
+    background-color: rgba(72, 187, 120, 0.1);
+    border-color: #48bb78;
+    color: #68d391;
+}
+
+.distribution-item.warning {
+    background-color: rgba(237, 137, 54, 0.1);
+    border-color: #ed8936;
+    color: #f6ad55;
+}
+
+.dist-label {
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+.dist-value {
+    font-size: 13px;
+    color: #cbd5e0;
+}
+
+.dist-value strong {
+    font-weight: 600;
+    font-size: 14px;
+    color: #f7fafc;
+}
+
+/* Raid Buffs Grid */
+.raid-buffs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.buff-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    border: 1px solid;
+}
+
+.buff-item.has-buff {
+    background-color: rgba(72, 187, 120, 0.1);
+    border-color: #48bb78;
+    color: #68d391;
+}
+
+.buff-item.missing-buff {
+    background-color: rgba(229, 62, 62, 0.1);
+    border-color: #e53e3e;
+    color: #fc8181;
+}
+
+.buff-icon {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.buff-name {
+    flex: 1;
+    color: #e2e8f0;
+}
+
+.no-buffs {
+    text-align: center;
+    color: #a0aec0;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Details button in group header (already dark themed) */
+.group-details-btn {
+    background: #4a5568;
+    border: 1px solid #718096;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: #e2e8f0;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.group-details-btn:hover {
+    background-color: #718096;
+    color: #f7fafc;
+}
+
+.group-details-btn i {
+    font-size: 11px;
+}
+
+/* Scrollbar for raid buffs */
+.raid-buffs-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.raid-buffs-grid::-webkit-scrollbar-track {
+    background: #2d3748;
+    border-radius: 3px;
+}
+
+.raid-buffs-grid::-webkit-scrollbar-thumb {
+    background: #4a5568;
+    border-radius: 3px;
+}
+
+.raid-buffs-grid::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}
+
+/* Dark theme for buttons */
+.split-details-modal .btn-secondary {
+    background-color: #4a5568;
+    border-color: #718096;
+    color: #f7fafc;
+}
+
+.split-details-modal .btn-secondary:hover {
+    background-color: #718096;
+    border-color: #a0aec0;
+}
+
+/* Dark mode overrides for split details modal */
+#splitDetailsModal .modal-container {
+    background: #1a202c;
+    color: #f7fafc;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+#splitDetailsModal .modal-header {
+    border-bottom-color: #4a5568;
+}
+
+#splitDetailsModal .modal-title {
+    color: #f7fafc;
+}
+
+#splitDetailsModal .modal-footer {
+    border-top-color: #4a5568;
 }
