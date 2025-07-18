@@ -223,6 +223,16 @@
             color: white;
         }
 
+        .badge-helper {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .badge-inactive {
+            background-color: #dc3545;
+            color: white;
+        }
+
         .badge-tank {
             background-color: #1e40af;
             color: white;
@@ -341,20 +351,155 @@
             color: #495057;
         }
 
-        .content-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #6c757d;
-            text-align: center;
+        /* Main body */
+        .main-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
         }
 
-        .placeholder-icon {
-            font-size: 48px;
+        /* Horizontal splits container */
+        .splits-container {
+            display: flex;
+            gap: 20px;
+            min-height: 100%;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        /* Each group container */
+        .group-container {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 16px;
-            opacity: 0.5;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .group-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+        }
+
+        .group-stats {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .stat-badge span {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        /* Character grid within each group */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Character card in group */
+        .character-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .character-card:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+            transform: translateX(2px);
+        }
+
+        .character-role-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .character-main-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .character-name-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .character-spec-class {
+            font-size: 12px;
+            color: #6c757d;
+            margin: 2px 0 0 0;
+        }
+
+        .character-priority-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .priority-main {
+            background-color: #d1e7fd;
+            color: #0c63e4;
+        }
+
+        .priority-alt {
+            background-color: #e2e3e5;
+            color: #41464b;
+        }
+
+        .priority-helper {
+            background-color: #f8e7d1;
+            color: #c47500;
+        }
+
+        .priority-inactive {
+            background-color: #f5c2c7;
+            color: #842029;
         }
 
         /* Modal Styles */
@@ -544,10 +689,28 @@
             color: #6c757d;
         }
 
-        .main-body {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        /* Welcome state before generation */
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.8;
         }
 
         .welcome-title {
@@ -561,46 +724,36 @@
             font-size: 18px;
             color: #6c757d;
             margin-bottom: 32px;
+            max-width: 600px;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background-color: #0d6efd;
-            color: white;
-            text-decoration: none;
+        /* Group info section */
+        .group-info {
+            background: #f8f9fa;
             border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .group-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .group-info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .group-info-label {
             font-weight: 500;
-            transition: background-color 0.2s ease;
         }
 
-        .action-btn:hover {
-            background-color: #0b5ed7;
-            color: white;
-        }
-
-        .action-btn.secondary {
-            background-color: #6c757d;
-        }
-
-        .action-btn.secondary:hover {
-            background-color: #5a6268;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #888;
+        .group-info-value {
+            color: #212529;
+            font-weight: 600;
         }
 
         /* Responsive */
@@ -612,6 +765,34 @@
             .main-body {
                 padding: 16px;
             }
+
+            .splits-container {
+                flex-direction: column;
+                overflow-x: visible;
+            }
+
+            .group-container {
+                min-width: 100%;
+            }
+        }
+
+        /* Scrollbar styling for groups */
+        .splits-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .splits-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .splits-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .splits-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
@@ -660,7 +841,7 @@
                                         <div class="character-details">{{ char.spec_name }} {{ char.class_name }}</div>
                                     </div>
                                     <div class="character-badges">
-                                        <span class="character-badge badge-{{ char.role_group }}">{{ char.role_group|title }}</span>
+                                        <span class="character-badge badge-{{ char.group }}">{{ char.group|title }}</span>
                                         <span class="character-badge badge-{{ char.role_raid }}">
                                             {% if char.role_raid == 'tank' %}
                                                 Tank
@@ -718,7 +899,15 @@
 
             <div class="main-body">
                 <div class="splits-container" id="splitsContainer">
-                    <!-- Split containers will be dynamically generated here -->
+                    <!-- Welcome state shown before first generation -->
+                    <div class="welcome-container" id="welcomeContainer">
+                        <div class="welcome-icon">🎲</div>
+                        <h1 class="welcome-title">Ready to Generate Raid Groups</h1>
+                        <p class="welcome-subtitle">
+                            Click "Generate Splits" to create optimized raid groups based on your current settings.
+                            The algorithm will balance roles, armor types, and tier tokens across all groups.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -775,6 +964,8 @@
             healersPerSplit: 5
         };
 
+        let hasGenerated = false;
+
         function openSettingsModal() {
             // Update form values with current settings
             document.getElementById('numberOfSplits').value = raidSettings.numberOfSplits;
@@ -812,52 +1003,12 @@
             document.getElementById('currentSplits').textContent = numberOfSplits;
             document.getElementById('currentHealers').textContent = healersPerSplit;
             
-            // Regenerate split containers
-            generateSplitContainers();
-            
             // Close modal
             closeSettingsModal();
             
             // Optional: Show success message
             console.log('Settings saved:', raidSettings);
         }
-
-        function generateSplitContainers() {
-            const container = document.getElementById('splitsContainer');
-            const numberOfSplits = raidSettings.numberOfSplits;
-            
-            // Clear existing containers
-            container.innerHTML = '';
-            
-            // Update container class
-            container.className = 'splits-container';
-            
-            // Create containers for each split
-            for (let i = 1; i <= numberOfSplits; i++) {
-                const groupRow = document.createElement('div');
-                groupRow.className = 'group-row';
-                groupRow.innerHTML = `
-                    <div class="group-info">
-                        <h3 class="group-title">Group ${i}</h3>
-                        <div class="group-additional-info">
-                            Variable 1: ${Math.floor(Math.random() * 100)}<br>
-                            Variable 2: ${Math.floor(Math.random() * 100)}
-                        </div>
-                    </div>
-                    <div class="group-members">
-                        <div class="characters-container" id="group-${i}-characters">
-                            <!-- Characters will be populated here -->
-                        </div>
-                    </div>
-                `;
-                container.appendChild(groupRow);
-            }
-        }
-
-        // Initialize split containers on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            generateSplitContainers();
-        });
 
         // Close modal when clicking outside
         document.getElementById('settingsModal').addEventListener('click', function(e) {
@@ -929,7 +1080,8 @@
                 if (data.success) {
                     // Populate the UI with generated groups
                     populateGroupsWithData(data.groups);
-                    console.log('✅ Raid splits generated successfully:', data.groups);
+                    hasGenerated = true;
+                    console.log('✅ Raid splits generated successfully');
                 } else {
                     throw new Error(data.error || 'Failed to generate splits');
                 }
@@ -946,30 +1098,127 @@
         }
 
         function populateGroupsWithData(groups) {
-            console.log('🎯 Populating UI with', groups.length, 'groups');
+            const container = document.getElementById('splitsContainer');
             
+            // Clear existing content
+            container.innerHTML = '';
+            
+            // Create horizontal group containers
             groups.forEach((group, index) => {
-                const containerId = `group-${group.group_id}-characters`;
-                const container = document.getElementById(containerId);
+                const groupDiv = createGroupContainer(group);
+                container.appendChild(groupDiv);
+            });
+        }
+
+        function createGroupContainer(group) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'group-container';
+            
+            // Create header with stats
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'group-header';
+            headerDiv.innerHTML = `
+                <h3 class="group-title">Group ${group.group_id}</h3>
+                <div class="group-stats">
+                    <div class="stat-badge">
+                        <i class="fas fa-users"></i>
+                        <span>${group.total_members}</span>
+                    </div>
+                </div>
+            `;
+            groupDiv.appendChild(headerDiv);
+            
+            // Create info section - Updated to show counts instead of percentages
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'group-info';
+            
+            // Format armor distribution for mains
+            const armorMainsText = formatDistribution(group.armor_distribution_mains);
+            const tierMainsText = formatDistribution(group.tier_distribution_mains);
+            
+            infoDiv.innerHTML = `
+                <div class="group-info-row">
+                    <span class="group-info-label">Composition:</span>
+                    <span class="group-info-value">${group.tanks}T / ${group.healers}H / ${group.dps}D</span>
+                </div>
+                <div class="group-info-row">
+                    <span class="group-info-label">Armor (Mains):</span>
+                    <span class="group-info-value">${armorMainsText}</span>
+                </div>
+                <div class="group-info-row">
+                    <span class="group-info-label">Tier (Mains):</span>
+                    <span class="group-info-value">${tierMainsText}</span>
+                </div>
+            `;
+            groupDiv.appendChild(infoDiv);
+            
+            // Create characters grid
+            const charactersDiv = document.createElement('div');
+            charactersDiv.className = 'characters-grid';
+            
+            // Sort characters by role for better visual organization
+            const sortedCharacters = sortCharactersByRole(group.characters);
+            
+            sortedCharacters.forEach(character => {
+                const charElement = createCharacterElement(character);
+                charactersDiv.appendChild(charElement);
+            });
+            
+            groupDiv.appendChild(charactersDiv);
+            
+            return groupDiv;
+        }
+
+        function formatDistribution(distribution) {
+            // Convert distribution object to readable text
+            if (!distribution || Object.keys(distribution).length === 0) {
+                return 'None';
+            }
+            
+            const parts = [];
+            const shortNames = {
+                'cloth': 'C',
+                'leather': 'L', 
+                'mail': 'M',
+                'plate': 'P',
+                'Mystic': 'My',
+                'Venerated': 'Ve',
+                'Zenith': 'Ze',
+                'Dreadful': 'Dr'
+            };
+            
+            for (const [key, value] of Object.entries(distribution)) {
+                if (value > 0) {
+                    const shortName = shortNames[key] || key.substring(0, 2);
+                    parts.push(`${shortName}:${value}`);
+                }
+            }
+            
+            return parts.join(' ');
+        }
+
+        function sortCharactersByRole(characters) {
+            const roleOrder = {
+                'tank': 1,
+                'healer': 2,
+                'mdps': 3,
+                'rdps': 4
+            };
+            
+            return characters.sort((a, b) => {
+                const roleA = roleOrder[a.role_raid] || 5;
+                const roleB = roleOrder[b.role_raid] || 5;
                 
-                if (!container) {
-                    console.warn(`Container not found: ${containerId}`);
-                    return;
+                if (roleA !== roleB) {
+                    return roleA - roleB;
                 }
                 
-                // Clear existing content
-                container.innerHTML = '';
+                // Secondary sort by priority
+                const priorityOrder = {'main': 1, 'alt': 2, 'helper': 3, 'inactive': 4};
+                const priorityA = priorityOrder[a.role_group] || 5;
+                const priorityB = priorityOrder[b.role_group] || 5;
                 
-                // Add characters to container
-                group.characters.forEach(character => {
-                    const charElement = createCharacterElement(character);
-                    container.appendChild(charElement);
-                });
-                
-                // Update group info variables
-                updateGroupInfo(group);
-                
-                console.log(`✅ Group ${group.group_id}: ${group.characters.length} characters assigned`);
+                return priorityA - priorityB;
             });
         }
 
@@ -984,13 +1233,15 @@
             const roleIcon = getRoleIcon(character.role_raid);
             
             charDiv.innerHTML = `
-                <div class="character-icon ${classColor}">
+                <div class="character-role-icon ${classColor}">
                     ${roleIcon}
                 </div>
-                <div class="character-details">
-                    <div class="character-name">${character.name}</div>
-                    <div class="character-spec">${character.spec_name} ${character.class_name}</div>
-                    <div class="character-priority">${character.role_group}</div>
+                <div class="character-main-info">
+                    <div class="character-name-display">${character.name}</div>
+                    <div class="character-spec-class">${character.spec_name} ${character.class_name}</div>
+                </div>
+                <div class="character-priority-badge priority-${character.role_group}">
+                    ${character.role_group}
                 </div>
             `;
             
@@ -1024,23 +1275,6 @@
                 'rdps': '🏹'
             };
             return iconMap[role] || '⚡';
-        }
-
-        function updateGroupInfo(group) {
-            // Find the group container and update variables
-            const groupElements = document.querySelectorAll('.group-row');
-            
-            groupElements.forEach((element, index) => {
-                if (index + 1 === group.group_id) {
-                    const infoElement = element.querySelector('.group-additional-info');
-                    if (infoElement) {
-                        infoElement.innerHTML = `
-                            Variable 1: ${group.variable_1}<br>
-                            Variable 2: ${group.variable_2}
-                        `;
-                    }
-                }
-            });
         }
     </script>
 </body>
