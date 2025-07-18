@@ -1,0 +1,26 @@
+<!-- GroupStats Component - Detailed group statistics -->
+<!-- Props: group (object with tanks, healers, dps, mains_count, armor_distribution_mains, tier_distribution_mains) -->
+<div class="group-info">
+    <div class="group-info-row">
+        <span class="group-info-label">Composition:</span>
+        <span class="group-info-value">{{ group.tanks }}T / {{ group.healers }}H / {{ group.dps }}D</span>
+    </div>
+    <div class="group-info-row">
+        <span class="group-info-label">Main Characters:</span>
+        <span class="group-info-value">{{ group.mains_count if group.mains_count is defined else 'N/A' }}</span>
+    </div>
+    <div class="group-info-row">
+        <span class="group-info-label">Armor (Mains):</span>
+        <span class="group-info-value">
+            {% set armor_dist = group.armor_distribution_mains if group.armor_distribution_mains else {} %}
+            {{ armor_dist.get('plate', 0) }}P / {{ armor_dist.get('mail', 0) }}M / {{ armor_dist.get('leather', 0) }}L / {{ armor_dist.get('cloth', 0) }}C
+        </span>
+    </div>
+    <div class="group-info-row">
+        <span class="group-info-label">Tier (Mains):</span>
+        <span class="group-info-value">
+            {% set tier_dist = group.tier_distribution_mains if group.tier_distribution_mains else {} %}
+            {{ tier_dist.get('Zenith', 0) }}Z / {{ tier_dist.get('Dreadful', 0) }}D / {{ tier_dist.get('Mystic', 0) }}M / {{ tier_dist.get('Venerated', 0) }}V
+        </span>
+    </div>
+</div>

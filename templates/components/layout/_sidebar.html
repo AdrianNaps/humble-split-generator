@@ -1,0 +1,17 @@
+<!-- Sidebar Component - Main left sidebar layout -->
+<!-- Props: players (array), total_characters (number) -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-title">⚔️ WoW Roster</div>
+        <div class="sidebar-subtitle">{{ players|length }} Players • {{ total_characters }} Characters</div>
+    </div>
+    
+    <div class="sidebar-content">
+        {% if players and players|length > 0 %}
+            {% include 'components/player/_player_list.html' %}
+        {% else %}
+            {% set empty_type = 'sidebar' %}
+            {% include 'components/ui/_empty_state.html' %}
+        {% endif %}
+    </div>
+</div>

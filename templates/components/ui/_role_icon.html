@@ -1,0 +1,3 @@
+<!-- RoleIcon Component - Reusable role icon display -->
+<!-- Props: char (object with role_raid) -->
+{% if char.role_raid == 'tank' %}🛡️{% elif char.role_raid == 'healer' %}💚{% elif char.role_raid == 'mdps' %}⚔️{% elif char.role_raid == 'rdps' %}🏹{% else %}⚡{% endif %}

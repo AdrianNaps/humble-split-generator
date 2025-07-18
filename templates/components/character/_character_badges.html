@@ -1,0 +1,16 @@
+<!-- CharacterBadges Component - Priority and role badges -->
+<!-- Props: char (object with group, role_raid) -->
+<span class="character-badge badge-{{ char.group }}">{{ char.group|title }}</span>
+<span class="character-badge badge-{{ char.role_raid }}">
+    {% if char.role_raid == 'tank' %}
+        Tank
+    {% elif char.role_raid == 'healer' %}
+        Healer
+    {% elif char.role_raid == 'mdps' %}
+        Melee
+    {% elif char.role_raid == 'rdps' %}
+        Ranged
+    {% else %}
+        DPS
+    {% endif %}
+</span>

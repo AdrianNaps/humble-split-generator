@@ -1,0 +1,41 @@
+<!-- SettingsForm Component - Settings form with current values display -->
+<!-- Props: None (uses global settings state) -->
+<div class="current-settings">
+    <h4>Current Settings</h4>
+    <div class="settings-grid">
+        <div class="setting-item">
+            <div class="setting-value" id="currentSplits">3</div>
+            <div class="setting-label">Number of Splits</div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-value" id="currentHealers">5</div>
+            <div class="setting-label">Healers per Split</div>
+        </div>
+    </div>
+</div>
+
+<form id="settingsForm">
+    <div class="form-group">
+        <label for="numberOfSplits" class="form-label">Number of Splits</label>
+        <input type="number" 
+               class="form-control" 
+               id="numberOfSplits" 
+               min="2" 
+               max="5" 
+               value="3"
+               aria-describedby="splitsHelp">
+        <div id="splitsHelp" class="form-text">How many raid groups to create (2-5)</div>
+    </div>
+    
+    <div class="form-group">
+        <label for="healersPerSplit" class="form-label">Healers per Split</label>
+        <input type="number" 
+               class="form-control" 
+               id="healersPerSplit" 
+               min="1" 
+               max="8" 
+               value="5"
+               aria-describedby="healersHelp">
+        <div id="healersHelp" class="form-text">Target number of healers per group (1-8)</div>
+    </div>
+</form>

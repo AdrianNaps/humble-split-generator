@@ -1,0 +1,20 @@
+<!-- SettingsModal Component - Complete settings modal -->
+<!-- Props: None (uses global settings state) -->
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title">Raid Group Settings</h3>
+            <button class="modal-close" onclick="closeSettingsModal()" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            {% include 'components/settings/_settings_form.html' %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i>
+                Save Settings
+            </button>
+        </div>
+    </div>
+</div>

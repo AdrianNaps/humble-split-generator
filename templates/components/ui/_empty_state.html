@@ -1,0 +1,16 @@
+<!-- EmptyState Component - Reusable empty state display -->
+<!-- Props: empty_type (string) - determines icon and message -->
+<div class="empty-state">
+    {% if empty_type == 'sidebar' %}
+        <div style="font-size: 48px; margin-bottom: 16px;">👥</div>
+        <div>No players found</div>
+        <div style="font-size: 12px; margin-top: 8px;">Run the database initialization</div>
+    {% elif empty_type == 'characters' %}
+        <div style="font-size: 48px; margin-bottom: 16px;">⚔️</div>
+        <div>No characters found</div>
+        <div style="font-size: 12px; margin-top: 8px;">Add some characters to get started</div>
+    {% else %}
+        <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+        <div>Nothing to display</div>
+    {% endif %}
+</div>

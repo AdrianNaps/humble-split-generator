@@ -1,0 +1,11 @@
+<!-- GroupHeader Component - Raid group header with title and member count -->
+<!-- Props: group (object with group_id, total_members) -->
+<div class="group-header">
+    <h3 class="group-title">Group {{ group.group_id }}</h3>
+    <div class="group-stats">
+        <div class="stat-badge">
+            <i class="fas fa-users"></i>
+            <span>{{ group.total_members }}</span>
+        </div>
+    </div>
+</div>

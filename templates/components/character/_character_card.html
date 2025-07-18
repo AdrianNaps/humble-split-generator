@@ -1,0 +1,22 @@
+<!-- CharacterCard Component - Character display in raid groups -->
+<!-- Props: character (object with name, class_name, spec_name, role_raid, role_group) -->
+<div class="character-card" 
+     data-character-id="{{ character.name }}" 
+     data-role="{{ character.role_raid }}" 
+     data-priority="{{ character.role_group }}"
+     data-class="{{ character.class_name }}">
+    
+    <div class="character-role-icon class-{{ character.class_name|lower|replace(' ', '_') }}">
+        {% set char = character %}
+        {% include 'components/ui/_role_icon.html' %}
+    </div>
+    
+    <div class="character-main-info">
+        <div class="character-name-display">{{ character.name }}</div>
+        <div class="character-spec-class">{{ character.spec_name }} {{ character.class_name }}</div>
+    </div>
+    
+    <div class="character-priority-badge priority-{{ character.role_group }}">
+        {{ character.role_group }}
+    </div>
+</div>

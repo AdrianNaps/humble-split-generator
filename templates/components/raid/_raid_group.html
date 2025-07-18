@@ -1,0 +1,12 @@
+<!-- RaidGroup Component - Individual raid group container -->
+<!-- Props: group (object with group_id, characters, tanks, healers, dps, etc.) -->
+<div class="group-container" data-group-id="{{ group.group_id }}">
+    {% include 'components/raid/_group_header.html' %}
+    {% include 'components/raid/_group_stats.html' %}
+    
+    <div class="characters-grid">
+        {% for character in group.characters %}
+            {% include 'components/character/_character_card.html' %}
+        {% endfor %}
+    </div>
+</div>

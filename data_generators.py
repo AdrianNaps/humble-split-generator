@@ -190,7 +190,7 @@ class DataGenerator:
             
             logger.info(f"👤 Creating {template['name']} ({player_role}) - {char_count} characters")
             
-            # Create characters following exact schema
+            # Create characters following correct schema
             for j in range(char_count):
                 # Get unique character name (max 12 chars per schema)
                 char_name = self._get_unique_character_name(used_names, template["name"], j)
@@ -200,13 +200,13 @@ class DataGenerator:
                 class_id, spec_id = char_specs[j]
                 group = role_groups[j] if j < len(role_groups) else "helper"
                 
-                # Character follows exact schema
+                # Character follows correct schema that matches app.py expectations
                 character = {
                     "name": char_name,
-                    "player_id": str(player_id),  # Convert ObjectId to string
-                    "group": group,  # Using "group" not "role_group" per schema
+                    "player_id": player_id,  # Keep as ObjectId for correct relationships
+                    "role_group": group,  # FIXED: Use "role_group" not "group"
                     "class_id": class_id,
-                    "spec": spec_id  # Using "spec" not "spec_id" per schema
+                    "spec_id": spec_id  # FIXED: Use "spec_id" not "spec"
                 }
                 
                 self.db.characters.insert_one(character)
@@ -237,7 +237,7 @@ class DataGenerator:
         """Calculate and log final statistics"""
         # Count characters by role using the correct field names
         tank_pipeline = [
-            {"$lookup": {"from": "specs", "localField": "spec", "foreignField": "spec_id", "as": "spec_info"}},
+            {"$lookup": {"from": "specs", "localField": "spec_id", "foreignField": "spec_id", "as": "spec_info"}},
             {"$unwind": "$spec_info"},
             {"$match": {"spec_info.role_raid": "tank"}},
             {"$count": "tanks"}
@@ -246,7 +246,7 @@ class DataGenerator:
         tank_total = tank_count[0]["tanks"] if tank_count else 0
         
         healer_pipeline = [
-            {"$lookup": {"from": "specs", "localField": "spec", "foreignField": "spec_id", "as": "spec_info"}},
+            {"$lookup": {"from": "specs", "localField": "spec_id", "foreignField": "spec_id", "as": "spec_info"}},
             {"$unwind": "$spec_info"},
             {"$match": {"spec_info.role_raid": "healer"}},
             {"$count": "healers"}

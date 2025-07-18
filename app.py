@@ -1,12 +1,14 @@
 from flask import Flask, render_template, jsonify, request
 from bson import ObjectId
 import os
+import random 
 import logging
 
-# Import our new modular components
+# Import our modular components
 from database import WoWRosterDB
 from data_generators import generate_raid_roster, generate_test_roster, generate_stress_test_roster
-from raid_splitter import RaidSplitter
+from raid_splitter import RaidSplitter  # Original complex splitter
+from simple_splitter import create_simple_raid_groups  # New simple splitter
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -17,34 +19,7 @@ app = Flask(__name__)
 # Initialize database connection
 db = WoWRosterDB()
 
-def debug_data_structure():
-    """Debug function to see how data is actually stored"""
-    print("\n🔍 DEBUGGING DATA STRUCTURE:")
-    
-    # Check players
-    sample_player = db.players.find_one()
-    if sample_player:
-        print(f"📋 Sample Player: {sample_player}")
-        print(f"   Player _id type: {type(sample_player['_id'])}")
-        print(f"   Player _id value: {sample_player['_id']}")
-    else:
-        print("❌ No players found!")
-    
-    # Check characters  
-    sample_character = db.characters.find_one()
-    if sample_character:
-        print(f"🗡️ Sample Character: {sample_character}")
-        print(f"   Character player_id type: {type(sample_character['player_id'])}")
-        print(f"   Character player_id value: {sample_character['player_id']}")
-    else:
-        print("❌ No characters found!")
-    
-    # Count totals
-    player_count = db.players.count_documents({})
-    char_count = db.characters.count_documents({})
-    print(f"📊 Totals: {player_count} players, {char_count} characters")
-
-# Routes
+# Routes (keeping existing ones unchanged)
 @app.route('/')
 def index():
     """Main page - Players with their characters in sidebar layout"""
@@ -67,7 +42,7 @@ def index():
                     {
                         "$lookup": {
                             "from": "specs",
-                            "localField": "spec_id",  # Changed from "spec" to "spec_id"
+                            "localField": "spec_id",
                             "foreignField": "spec_id",
                             "as": "spec_info"
                         }
@@ -77,12 +52,12 @@ def index():
                     {
                         "$project": {
                             "name": 1,
-                            "group": "$role_group",  # Map role_group to group for template compatibility
+                            "group": "$role_group",
                             "class_name": "$class_info.class_name",
                             "spec_name": "$spec_info.spec_name",
                             "role_raid": "$spec_info.role_raid",
                             "class_id": 1,
-                            "spec": "$spec_id"  # Map spec_id to spec for template compatibility
+                            "spec": "$spec_id"
                         }
                     }
                 ]
@@ -97,6 +72,92 @@ def index():
     logger.info(f"📊 Loaded {len(players)} players with {total_characters} total characters")
     
     return render_template('index.html', players=players, total_characters=total_characters)
+
+@app.route('/api/generate-splits', methods=['POST'])
+def generate_splits():
+    """Generate raid groups using the NEW Simple Splitter with character locks"""
+    try:
+        data = request.get_json() or {}
+        num_groups = data.get('num_groups', 3)
+        group_size = data.get('group_size', 30)
+        character_locks = data.get('character_locks', [])
+        
+        logger.info(f"🎯 Generating {num_groups} groups with max {group_size} characters each (Simple Splitter)")
+        if character_locks:
+            logger.info(f"🔒 Processing {len(character_locks)} character locks")
+            for lock in character_locks:
+                logger.info(f"   🔒 {lock.get('characterName')} → Group {lock.get('groupId')}")
+        
+        # FIXED: Import and use the class to support locks
+        from simple_splitter import SimpleRaidSplitter
+        
+        # Use the class with locks
+        splitter = SimpleRaidSplitter(db)
+        groups = splitter.create_groups(num_groups, group_size, character_locks)
+        groups_data = splitter.groups_to_dict(groups)
+        
+        logger.info(f"✅ Successfully generated {len(groups_data)} groups using Simple Splitter")
+        if character_locks:
+            logger.info(f"✅ Applied {len(character_locks)} character locks")
+        
+        return jsonify({
+            'success': True,
+            'groups': groups_data,
+            'settings': {
+                'num_groups': num_groups,
+                'group_size': group_size
+            },
+            'splitter_type': 'simple',
+            'locks_applied': len(character_locks)
+        })
+        
+    except Exception as e:
+        logger.error(f"❌ Error generating splits: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/generate-splits-complex', methods=['POST'])
+def generate_splits_complex():
+    """Generate raid groups using the Original Complex Splitter (for comparison)"""
+    try:
+        data = request.get_json() or {}
+        num_groups = data.get('num_groups', 3)
+        healers_per_group = data.get('healers_per_group', 5)
+        group_size = data.get('group_size', 30)
+        
+        logger.info(f"🎯 Generating {num_groups} groups with {healers_per_group} healers each (Complex Splitter)")
+        
+        splitter = RaidSplitter(db)
+        groups = splitter.create_optimal_groups(
+            num_groups=num_groups,
+            group_size=group_size,
+            healers_per_group=healers_per_group
+        )
+        
+        groups_data = splitter.groups_to_dict(groups)
+        logger.info(f"✅ Successfully generated {len(groups_data)} groups using Complex Splitter")
+        
+        return jsonify({
+            'success': True,
+            'groups': groups_data,
+            'settings': {
+                'num_groups': num_groups,
+                'healers_per_group': healers_per_group,
+                'group_size': group_size
+            },
+            'splitter_type': 'complex'
+        })
+        
+    except Exception as e:
+        logger.error(f"❌ Error generating splits: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 @app.route('/characters')
 def characters():
@@ -121,7 +182,7 @@ def characters():
         {
             "$lookup": {
                 "from": "specs",
-                "localField": "spec_id",  # Changed from "spec" to "spec_id"
+                "localField": "spec_id",
                 "foreignField": "spec_id",
                 "as": "spec_info"
             }
@@ -132,7 +193,7 @@ def characters():
         {
             "$project": {
                 "name": 1,
-                "group": "$role_group",  # Map role_group to group
+                "group": "$role_group",
                 "player_name": "$player.displayName",
                 "discord_tag": "$player.discordTag",
                 "class_name": "$class_info.class_name",
@@ -155,7 +216,7 @@ def api_stats():
         "total_players": db.players.count_documents({}),
         "total_characters": db.characters.count_documents({}),
         "role_distribution": list(db.characters.aggregate([
-            {"$lookup": {"from": "specs", "localField": "spec_id", "foreignField": "spec_id", "as": "spec"}},  # Changed from "spec"
+            {"$lookup": {"from": "specs", "localField": "spec_id", "foreignField": "spec_id", "as": "spec"}},
             {"$unwind": "$spec"},
             {"$group": {"_id": "$spec.role_raid", "count": {"$sum": 1}}},
             {"$sort": {"count": -1}}
@@ -191,7 +252,7 @@ def api_players():
                     {
                         "$lookup": {
                             "from": "specs",
-                            "localField": "spec_id",  # Changed from "spec" to "spec_id"
+                            "localField": "spec_id",
                             "foreignField": "spec_id",
                             "as": "spec_info"
                         }
@@ -201,12 +262,12 @@ def api_players():
                     {
                         "$project": {
                             "name": 1,
-                            "group": "$role_group",  # Map role_group to group
+                            "group": "$role_group",
                             "class_name": "$class_info.class_name",
                             "spec_name": "$spec_info.spec_name",
                             "role_raid": "$spec_info.role_raid",
                             "class_id": 1,
-                            "spec": "$spec_id"  # Map spec_id to spec
+                            "spec": "$spec_id"
                         }
                     }
                 ]
@@ -225,44 +286,6 @@ def api_players():
         "players": players,
         "total_characters": sum(len(p.get('characters', [])) for p in players)
     })
-
-@app.route('/api/generate-splits', methods=['POST'])
-def generate_splits():
-    """Generate optimized raid groups using the RaidSplitter algorithm"""
-    try:
-        data = request.get_json() or {}
-        num_groups = data.get('num_groups', 3)
-        healers_per_group = data.get('healers_per_group', 5)
-        group_size = data.get('group_size', 30)
-        
-        logger.info(f"🎯 Generating {num_groups} groups with {healers_per_group} healers each...")
-        
-        splitter = RaidSplitter(db)
-        groups = splitter.create_optimal_groups(
-            num_groups=num_groups,
-            group_size=group_size,
-            healers_per_group=healers_per_group
-        )
-        
-        groups_data = splitter.groups_to_dict(groups)
-        logger.info(f"✅ Successfully generated {len(groups_data)} groups")
-        
-        return jsonify({
-            'success': True,
-            'groups': groups_data,
-            'settings': {
-                'num_groups': num_groups,
-                'healers_per_group': healers_per_group,
-                'group_size': group_size
-            }
-        })
-        
-    except Exception as e:
-        logger.error(f"❌ Error generating splits: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
 
 @app.route('/api/db-status')
 def db_status():
@@ -296,7 +319,7 @@ def initialize_schema():
             "message": str(e)
         }), 500
 
-@app.route('/api/generate-raid-roster', methods=['POST'])
+@app.route('/api/generate-raid-roster', methods=['POST', 'GET'])
 def api_generate_raid_roster():
     """Generate the standard raid-ready roster (40 players, 90+ chars)"""
     try:
@@ -347,36 +370,66 @@ def api_generate_stress_test():
             "message": str(e)
         }), 500
 
+@app.route('/api/debug-schema')
+def debug_schema():
+    """Debug endpoint to check actual database schema"""
+    try:
+        # Get field names only (no ObjectId values)
+        char_fields = []
+        spec_fields = []
+        class_fields = []
+        
+        sample_char = db.characters.find_one()
+        if sample_char:
+            char_fields = [f for f in sample_char.keys() if f != '_id']
+            
+        sample_spec = db.specs.find_one()
+        if sample_spec:
+            spec_fields = [f for f in sample_spec.keys() if f != '_id']
+            
+        sample_class = db.classes.find_one()
+        if sample_class:
+            class_fields = [f for f in sample_class.keys() if f != '_id']
+        
+        # Get sample data without ObjectIds
+        char_sample = db.characters.find_one({}, {"_id": 0, "player_id": 0})
+        spec_sample = db.specs.find_one({}, {"_id": 0})
+        class_sample = db.classes.find_one({}, {"_id": 0})
+        
+        return jsonify({
+            "character_fields": char_fields,
+            "spec_fields": spec_fields,
+            "class_fields": class_fields,
+            "sample_character": char_sample,
+            "sample_spec": spec_sample,
+            "sample_class": class_sample
+        })
+        
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "error_type": type(e).__name__
+        }), 500
+
 if __name__ == '__main__':
-    # Check database state on startup
-    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true':
-        try:
-            stats = db.get_stats()
-            logger.info(f"📊 Current database state: {stats}")
-            
-            # Debug the data structure
-            debug_data_structure()
-            
-            # Auto-initialize if empty
-            if stats['players'] == 0:
-                logger.info("🔧 Database appears empty, initializing...")
-                db.initialize_schema()
-                generate_raid_roster(db)
-                # Debug again after generation
-                print("\n🔄 After generating data:")
-                debug_data_structure()
-            else:
-                logger.info(f"✅ Database ready with {stats['players']} players and {stats['characters']} characters")
+    # Simplified startup - no debug functions that might hang
+    try:
+        stats = db.get_stats()
+        logger.info(f"📊 Current database state: {stats}")
+        
+        if stats['players'] == 0:
+            logger.info("🔧 Database appears empty, initializing...")
+            db.initialize_schema()
+            generate_raid_roster(db)
+        else:
+            logger.info(f"✅ Database ready with {stats['players']} players and {stats['characters']} characters")
                 
-        except Exception as e:
-            logger.error(f"❌ Database connection error: {e}")
+    except Exception as e:
+        logger.error(f"❌ Database connection error: {e}")
     
-    logger.info("\n🌐 Starting Flask server...")
+    logger.info("🌐 Starting Flask server...")
     logger.info("📊 Visit http://localhost:5000 to view your roster!")
-    logger.info("\n🔧 Available data generation endpoints:")
-    logger.info("   POST /api/initialize-schema - Set up database structure")
-    logger.info("   POST /api/generate-raid-roster - Generate raid-ready roster (40 players)")
-    logger.info("   POST /api/generate-test-roster - Generate small test roster (15 players)")
-    logger.info("   POST /api/generate-stress-test - Generate imbalanced roster for testing")
+    logger.info("⚔️ NEW: Using Simple Splitter by default")
+    logger.info("⚔️ OLD: Complex splitter available at /api/generate-splits-complex")
     
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host='127.0.0.1')

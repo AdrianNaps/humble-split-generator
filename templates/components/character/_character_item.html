@@ -1,0 +1,14 @@
+<!-- CharacterItem Component - Character display in sidebar/lists -->
+<!-- Props: char (object with name, class_name, spec_name, role_raid, group) -->
+<div class="character-item" data-character-id="{{ char.name }}" data-role="{{ char.role_raid }}" data-priority="{{ char.group }}">
+    <div class="character-icon class-{{ char.class_name|lower|replace(' ', '_') }}">
+        {% include 'components/ui/_role_icon.html' %}
+    </div>
+    <div class="character-info">
+        <div class="character-name">{{ char.name }}</div>
+        <div class="character-details">{{ char.spec_name }} {{ char.class_name }}</div>
+    </div>
+    <div class="character-badges">
+        {% include 'components/character/_character_badges.html' %}
+    </div>
+</div>

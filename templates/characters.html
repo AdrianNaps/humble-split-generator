@@ -1,108 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Characters - WoW Roster Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .character-card {
-            transition: transform 0.2s;
-        }
-        .character-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .role-badge {
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
-        }
-        .class-color-death_knight { color: #C41F3B; }
-        .class-color-demon_hunter { color: #A330C9; }
-        .class-color-druid { color: #FF7D0A; }
-        .class-color-evoker { color: #33937F; }
-        .class-color-hunter { color: #ABD473; }
-        .class-color-mage { color: #69CCF0; }
-        .class-color-monk { color: #00FF96; }
-        .class-color-paladin { color: #F58CBA; }
-        .class-color-priest { color: #FFFFFF; }
-        .class-color-rogue { color: #FFF569; }
-        .class-color-shaman { color: #0070DE; }
-        .class-color-warlock { color: #9482C9; }
-        .class-color-warrior { color: #C79C6E; }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">⚔️ WoW Roster Manager</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Dashboard</a>
-                <a class="nav-link active" href="/characters">Characters</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="container mt-4">
-        <div class="row mb-4">
-            <div class="col">
-                <h1>🗡️ Character Roster</h1>
-                <p class="lead">All characters in the guild</p>
-            </div>
-        </div>
+{% extends "base.html" %}
 
-        <div class="row">
-            {% for char in characters %}
-            <div class="col-lg-4 col-md-6 mb-3">
-                <div class="card character-card h-100">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">{{ char.name }}</h5>
-                        <span class="badge bg-{{ 'primary' if char.group == 'main' else 'secondary' if char.group == 'alt' else 'warning' if char.group == 'helper' else 'danger' }}">
-                            {{ char.group|title }}
-                        </span>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-2">
-                            <span class="role-badge">
-                                {% if char.role_raid == 'tank' %}
-                                    🛡️
-                                {% elif char.role_raid == 'healer' %}
-                                    💚
-                                {% elif char.role_raid == 'mdps' %}
-                                    ⚔️
-                                {% elif char.role_raid == 'rdps' %}
-                                    🏹
-                                {% endif %}
-                            </span>
-                            <strong class="class-color-{{ char.class_name|lower|replace(' ', '_') }}">
-                                {{ char.class_name }}
-                            </strong>
-                            - {{ char.spec_name }}
-                        </div>
-                        
-                        <div class="text-muted small mb-2">
-                            <i class="bi bi-person-fill"></i> {{ char.player_name }}
-                            <span class="ms-2">{{ char.discord_tag }}</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between small">
-                            <span class="badge bg-info">{{ char.armor_type|title }}</span>
-                            <span class="badge bg-warning text-dark">{{ char.tier_token }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+{% block title %}Characters - WoW Roster Manager{% endblock %}
+
+{% block description %}Browse all characters in the guild roster{% endblock %}
+
+{% block body_class %}characters-page{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page-specific styles for character grid */
+    .character-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+        padding: 20px;
+    }
+    
+    .character-grid-card {
+        transition: transform 0.2s;
+    }
+    
+    .character-grid-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .characters-header {
+        background: white;
+        border-bottom: 1px solid #dee2e6;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .character-filters {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    .filter-select {
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        background: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">⚔️ WoW Roster Manager</a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="/">Dashboard</a>
+            <a class="nav-link active" href="/characters">Characters</a>
         </div>
-        
-        {% if not characters %}
-        <div class="alert alert-info">
-            <h4>No characters found</h4>
-            <p>The roster is currently empty.</p>
-        </div>
-        {% endif %}
+    </div>
+</nav>
+
+<!-- Characters Header -->
+<div class="characters-header">
+    <div>
+        <h1>🗡️ Character Roster</h1>
+        <p class="text-muted mb-0">{{ characters|length }} characters in the guild</p>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <div class="character-filters">
+        <select class="filter-select" id="roleFilter">
+            <option value="">All Roles</option>
+            <option value="tank">Tanks</option>
+            <option value="healer">Healers</option>
+            <option value="mdps">Melee DPS</option>
+            <option value="rdps">Ranged DPS</option>
+        </select>
+        
+        <select class="filter-select" id="priorityFilter">
+            <option value="">All Priorities</option>
+            <option value="main">Main</option>
+            <option value="alt">Alt</option>
+            <option value="helper">Helper</option>
+            <option value="inactive">Inactive</option>
+        </select>
+        
+        <input type="text" class="filter-select" id="searchFilter" placeholder="Search characters...">
+    </div>
+</div>
+
+<!-- Characters Grid -->
+<div class="character-grid" id="charactersGrid">
+    {% if characters %}
+        {% for char in characters %}
+        <div class="card character-grid-card h-100" 
+             data-role="{{ char.role_raid }}" 
+             data-priority="{{ char.group }}"
+             data-class="{{ char.class_name }}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ char.name }}</h5>
+                <span class="badge bg-{{ 'primary' if char.group == 'main' else 'secondary' if char.group == 'alt' else 'warning' if char.group == 'helper' else 'danger' }}">
+                    {{ char.group|title }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <span class="role-badge">
+                        {% set char_role = char %}
+                        {% include 'components/ui/_role_icon.html' with context {'char': {'role_raid': char.role_raid}} %}
+                    </span>
+                    <strong class="class-color-{{ char.class_name|lower|replace(' ', '_') }}">
+                        {{ char.class_name }}
+                    </strong>
+                    - {{ char.spec_name }}
+                </div>
+                
+                <div class="text-muted small mb-2">
+                    <i class="fas fa-user"></i> {{ char.player_name }}
+                    <span class="ms-2">{{ char.discord_tag }}</span>
+                </div>
+                
+                <div class="d-flex justify-content-between small">
+                    <span class="badge bg-info">{{ char.armor_type|title }}</span>
+                    <span class="badge bg-warning text-dark">{{ char.tier_token }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        {% set empty_type = 'characters' %}
+        {% include 'components/ui/_empty_state.html' %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Character page filtering
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleFilter = document.getElementById('roleFilter');
+        const priorityFilter = document.getElementById('priorityFilter');
+        const searchFilter = document.getElementById('searchFilter');
+        const charactersGrid = document.getElementById('charactersGrid');
+        const characterCards = charactersGrid.querySelectorAll('.character-grid-card');
+        
+        function filterCharacters() {
+            const roleValue = roleFilter.value;
+            const priorityValue = priorityFilter.value;
+            const searchValue = searchFilter.value.toLowerCase();
+            
+            characterCards.forEach(card => {
+                const role = card.dataset.role;
+                const priority = card.dataset.priority;
+                const characterName = card.querySelector('h5').textContent.toLowerCase();
+                const playerName = card.querySelector('.text-muted').textContent.toLowerCase();
+                
+                const roleMatch = !roleValue || role === roleValue;
+                const priorityMatch = !priorityValue || priority === priorityValue;
+                const searchMatch = !searchValue || 
+                    characterName.includes(searchValue) || 
+                    playerName.includes(searchValue);
+                
+                card.style.display = (roleMatch && priorityMatch && searchMatch) ? 'block' : 'none';
+            });
+            
+            // Update count
+            const visibleCards = Array.from(characterCards).filter(card => card.style.display !== 'none');
+            document.querySelector('.characters-header p').textContent = 
+                `${visibleCards.length} of ${characterCards.length} characters shown`;
+        }
+        
+        roleFilter.addEventListener('change', filterCharacters);
+        priorityFilter.addEventListener('change', filterCharacters);
+        searchFilter.addEventListener('input', debounce(filterCharacters, 300));
+        
+        console.log('📊 Characters page loaded with filtering');
+    });
+</script>
+{% endblock %}
