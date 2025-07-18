@@ -102,6 +102,13 @@ class SimpleGroup:
             if char.tier_token:  # Only count if tier_token is not empty
                 tier_count[char.tier_token] += 1
         return dict(tier_count)
+    def get_unique_raid_buffs(self) -> Set[str]:
+        """Get set of unique raid buffs provided by this group"""
+        buffs = set()
+        for char in self.characters:
+            if char.raid_buff_ids:
+                buffs.update(char.raid_buff_ids)
+        return buffs        
 
 class SimpleRaidSplitter:
     """
@@ -431,8 +438,15 @@ class SimpleRaidSplitter:
         
         logger.info(f"\n✅ Successfully distributed {total_chars} characters across {len(groups)} groups")
     
+    # Update your simple_splitter.py groups_to_dict method to include buff names:
+
     def groups_to_dict(self, groups: List[SimpleGroup]) -> List[Dict]:
         """Convert groups to dictionary format for API responses"""
+        # Get total number of raid buffs from database
+        total_raid_buffs = self.db.raid_buffs.count_documents({})   
+        # Get buff name mappings
+        buff_mappings = self._get_buff_mappings()
+        
         result = []
         
         for group in groups:
@@ -442,6 +456,16 @@ class SimpleRaidSplitter:
             # Get distributions for MAINS ONLY
             mains_armor_dist = group.get_armor_distribution(mains_only=True)
             mains_tier_dist = group.get_tier_distribution(mains_only=True)
+            # Get raid buff coverage
+            unique_buffs = group.get_unique_raid_buffs()
+            raid_buff_count = len(unique_buffs)
+            
+            # Get buff coverage for the group
+            group_buffs = set()
+            for char in group.characters:
+                for buff_id in char.raid_buff_ids:
+                    if buff_id in buff_mappings:
+                        group_buffs.add(buff_mappings[buff_id])
             
             group_dict = {
                 'group_id': group.group_id,
@@ -450,6 +474,8 @@ class SimpleRaidSplitter:
                 'healers': role_counts.get('healer', 0),
                 'dps': role_counts.get('mdps', 0) + role_counts.get('rdps', 0),
                 'mains_count': priority_counts.get('main', 0),
+                'raid_buff_count': raid_buff_count,
+                'total_raid_buffs': total_raid_buffs,
                 'priority_score': self._calculate_priority_score(group),
                 'variable_1': priority_counts.get('main', 0),  # Main count for display
                 'variable_2': len(group.characters),  # Total count for display
@@ -462,6 +488,9 @@ class SimpleRaidSplitter:
                 'armor_distribution': group.get_armor_distribution(),
                 'tier_distribution': group.get_tier_distribution(),
                 
+                # Add buff coverage
+                'raid_buffs': list(group_buffs),
+                
                 'characters': [
                     {
                         'name': char.name,
@@ -471,7 +500,7 @@ class SimpleRaidSplitter:
                         'role_group': char.role_group,
                         'armor_type': char.armor_type,
                         'tier_token': char.tier_token,
-                        'buffs': char.raid_buff_ids,
+                        'buffs': [buff_mappings.get(buff_id, buff_id) for buff_id in char.raid_buff_ids],
                         'is_locked': char.is_locked  # Include lock status
                     }
                     for char in group.characters
@@ -480,6 +509,15 @@ class SimpleRaidSplitter:
             result.append(group_dict)
         
         return result
+
+    def _get_buff_mappings(self) -> Dict[str, str]:
+        """Get buff ID to name mappings from database"""
+        try:
+            buffs = list(self.db.raid_buffs.find({}, {"buff_id": 1, "name": 1}))
+            return {buff['buff_id']: buff['name'] for buff in buffs}
+        except Exception as e:
+            logger.error(f"Error getting buff mappings: {e}")
+            return {}
     
     def _calculate_priority_score(self, group: SimpleGroup) -> float:
         """Calculate priority score for group"""

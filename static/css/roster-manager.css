@@ -1007,6 +1007,9 @@ html, body {
     color: #888;
 }
 
+/* Add this to your roster-manager.css file to ensure proper centering */
+
+/* Ensure welcome container properly centers content */
 .welcome-container {
     display: flex;
     flex-direction: column;
@@ -1016,26 +1019,35 @@ html, body {
     text-align: center;
     padding: 40px;
     color: #f7fafc;
+    width: 100%;  /* Ensure full width */
+    margin: 0 auto;  /* Center the container itself */
 }
 
-.welcome-icon {
+.welcome-container .welcome-icon {
     font-size: 64px;
     margin-bottom: 24px;
     opacity: 0.8;
+    display: block;  /* Ensure block display */
+    text-align: center;  /* Center the icon */
 }
 
-.welcome-title {
+.welcome-container .welcome-title {
     font-size: 32px;
     font-weight: 600;
     color: #f7fafc;
     margin-bottom: 16px;
+    text-align: center;  /* Explicitly center title */
+    width: 100%;  /* Full width to ensure centering works */
 }
 
-.welcome-subtitle {
+.welcome-container .welcome-subtitle {
     font-size: 18px;
     color: #cbd5e0;
     margin-bottom: 32px;
     max-width: 600px;
+    text-align: center;  /* Explicitly center subtitle */
+    margin-left: auto;  /* Center the subtitle container */
+    margin-right: auto;
 }
 
 /* ===== SCROLLBAR STYLING ===== */
@@ -1351,4 +1363,53 @@ html, body {
 
 #splitDetailsModal .modal-footer {
     border-top-color: #4a5568;
+}
+
+/* Export Button Styles */
+.export-btn {
+    background-color: #28a745 !important;
+    transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+    background-color: #218838 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.export-btn i {
+    margin-right: 4px;
+}
+
+/* Format Selection Modal Enhancement */
+.modal-container button[data-format] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    transition: all 0.2s ease;
+}
+
+.modal-container button[data-format]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Success message enhancement for export */
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* For dark mode compatibility */
+.main-content.dark-mode .export-btn {
+    background-color: #28a745 !important;
+    border: 1px solid #1e7e34;
+}
+
+.main-content.dark-mode .export-btn:hover {
+    background-color: #218838 !important;
+    border-color: #28a745;
 }

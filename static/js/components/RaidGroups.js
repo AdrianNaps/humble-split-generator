@@ -140,6 +140,10 @@ class RaidGroups {
         const tierDist = group.tier_distribution_mains || {};
         const tierDisplay = `${tierDist.Zenith || 0}Z / ${tierDist.Dreadful || 0}D / ${tierDist.Mystic || 0}M / ${tierDist.Venerated || 0}V`;
         
+        // Get raid buff count
+        const raidBuffCount = group.raid_buff_count || 0;
+        const totalRaidBuffs = group.total_raid_buffs || 11; // Default to 11 if not provided
+        
         infoDiv.innerHTML = `
             <div class="group-info-row">
                 <span class="group-info-label">Composition:</span>
@@ -148,6 +152,10 @@ class RaidGroups {
             <div class="group-info-row">
                 <span class="group-info-label">Main Characters:</span>
                 <span class="group-info-value">${group.mains_count || 'N/A'}</span>
+            </div>
+            <div class="group-info-row">
+                <span class="group-info-label">Raid Buffs:</span>
+                <span class="group-info-value">${raidBuffCount}/${totalRaidBuffs}</span>
             </div>
             <div class="group-info-row">
                 <span class="group-info-label">Armor (Mains):</span>

@@ -10,6 +10,10 @@
         <span class="group-info-value">{{ group.mains_count if group.mains_count is defined else 'N/A' }}</span>
     </div>
     <div class="group-info-row">
+        <span class="group-info-label">Raid Buffs:</span>
+        <span class="group-info-value">{{ group.raid_buff_count if group.raid_buff_count is defined else '0' }}/{{ group.total_raid_buffs if group.total_raid_buffs is defined else '11' }}</span>
+    </div>
+    <div class="group-info-row">
         <span class="group-info-label">Armor (Mains):</span>
         <span class="group-info-value">
             {% set armor_dist = group.armor_distribution_mains if group.armor_distribution_mains else {} %}
