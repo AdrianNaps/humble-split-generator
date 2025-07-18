@@ -411,6 +411,133 @@ def debug_schema():
             "error_type": type(e).__name__
         }), 500
 
+@app.route('/api/roster-stats')
+def api_roster_stats():
+    """API endpoint for detailed roster statistics"""
+    try:
+        # Get role group counts
+        role_groups_pipeline = [
+            {
+                "$group": {
+                    "_id": "$role_group",
+                    "count": {"$sum": 1}
+                }
+            }
+        ]
+        
+        role_groups_result = list(db.characters.aggregate(role_groups_pipeline))
+        role_group_counts = {
+            "main": 0,
+            "alt": 0,
+            "helper": 0
+        }
+        
+        for group in role_groups_result:
+            if group['_id'] in role_group_counts:
+                role_group_counts[group['_id']] = group['count']
+        
+        # Get mains statistics - tokens and armor
+        mains_pipeline = [
+            {
+                "$lookup": {
+                    "from": "classes",
+                    "localField": "class_id",
+                    "foreignField": "class_id",
+                    "as": "class_info"
+                }
+            },
+            {"$unwind": "$class_info"},
+            {"$match": {"role_group": "main"}},  # Filter for mains only
+            {
+                "$group": {
+                    "_id": None,
+                    "tokens": {
+                        "$push": "$class_info.tier_token"
+                    },
+                    "armor": {
+                        "$push": "$class_info.armor_type"
+                    }
+                }
+            }
+        ]
+        
+        mains_result = list(db.characters.aggregate(mains_pipeline))
+        
+        # Initialize counts
+        token_counts = {"Zenith": 0, "Dreadful": 0, "Mystic": 0, "Venerated": 0}
+        armor_counts = {"plate": 0, "mail": 0, "leather": 0, "cloth": 0}
+        
+        if mains_result and mains_result[0]:
+            # Count tokens
+            for token in mains_result[0].get('tokens', []):
+                if token in token_counts:
+                    token_counts[token] += 1
+            
+            # Count armor
+            for armor in mains_result[0].get('armor', []):
+                if armor in armor_counts:
+                    armor_counts[armor] += 1
+        
+        # Get raid buffs from ALL characters
+        raid_buffs_pipeline = [
+            {
+                "$lookup": {
+                    "from": "classes",
+                    "localField": "class_id",
+                    "foreignField": "class_id",
+                    "as": "class_info"
+                }
+            },
+            {"$unwind": "$class_info"},
+            {"$unwind": {"path": "$class_info.raid_buff_ids", "preserveNullAndEmptyArrays": False}},
+            {
+                "$lookup": {
+                    "from": "raid_buffs",
+                    "localField": "class_info.raid_buff_ids",
+                    "foreignField": "buff_id",
+                    "as": "buff_info"
+                }
+            },
+            {"$unwind": "$buff_info"},
+            {
+                "$group": {
+                    "_id": "$buff_info.name",
+                    "count": {"$sum": 1}
+                }
+            },
+            {"$sort": {"_id": 1}}
+        ]
+        
+        raid_buffs_result = list(db.characters.aggregate(raid_buffs_pipeline))
+        
+        # Format raid buffs
+        raid_buffs = {}
+        for buff in raid_buffs_result:
+            raid_buffs[buff['_id']] = buff['count']
+        
+        # Get all possible raid buffs and set count to 0 if not present
+        all_buffs = list(db.raid_buffs.find({}, {"name": 1, "_id": 0}))
+        for buff in all_buffs:
+            if buff['name'] not in raid_buffs:
+                raid_buffs[buff['name']] = 0
+        
+        return jsonify({
+            "roleGroups": role_group_counts,
+            "mains": {
+                "tokens": token_counts,
+                "armor": armor_counts
+            },
+            "all": {
+                "raidBuffs": raid_buffs
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Error calculating roster stats: {str(e)}")
+        return jsonify({
+            "error": str(e)
+        }), 500
+        
 if __name__ == '__main__':
     # Simplified startup - no debug functions that might hang
     try:

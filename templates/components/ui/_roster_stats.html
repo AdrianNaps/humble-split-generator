@@ -1,0 +1,96 @@
+<!-- Roster Stats Component - Collapsible statistics panel -->
+<!-- Props: stats (object with mains and all character statistics) -->
+<div class="roster-stats-container">
+    <div class="roster-stats-header" id="rosterStatsHeader" role="button" aria-expanded="false">
+        <div class="roster-stats-title">
+            <i class="fas fa-chart-bar"></i>
+            Roster Stats
+        </div>
+        <i class="fas fa-chevron-right expand-icon" id="rosterStatsExpandIcon"></i>
+    </div>
+    
+    <div class="roster-stats-content" id="rosterStatsContent" style="display: none;">
+        <!-- Role Groups Overview -->
+        <div class="stats-section">
+            <h4 class="stats-section-title">Role Groups</h4>
+            <div class="role-groups-grid">
+                <div class="role-group-item">
+                    <span class="role-group-label">Mains:</span>
+                    <span class="role-group-value" id="mainsCount">0</span>
+                </div>
+                <div class="role-group-item">
+                    <span class="role-group-label">Alts:</span>
+                    <span class="role-group-value" id="altsCount">0</span>
+                </div>
+                <div class="role-group-item">
+                    <span class="role-group-label">Helpers:</span>
+                    <span class="role-group-value" id="helpersCount">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mains Section -->
+        <div class="stats-section">
+            <h4 class="stats-section-title">Mains</h4>
+            
+            <!-- Tokens Subsection -->
+            <div class="stats-subsection">
+                <h5 class="stats-subsection-title">Tokens:</h5>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Zenith:</span>
+                        <span class="stat-value" id="mainZenithCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Dreadful:</span>
+                        <span class="stat-value" id="mainDreadfulCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Mystic:</span>
+                        <span class="stat-value" id="mainMysticCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Venerated:</span>
+                        <span class="stat-value" id="mainVeneratedCount">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Armor Subsection -->
+            <div class="stats-subsection">
+                <h5 class="stats-subsection-title">Armor:</h5>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Plate:</span>
+                        <span class="stat-value" id="mainPlateCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Mail:</span>
+                        <span class="stat-value" id="mainMailCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Leather:</span>
+                        <span class="stat-value" id="mainLeatherCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Cloth:</span>
+                        <span class="stat-value" id="mainClothCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- All Characters Section -->
+        <div class="stats-section">
+            <h4 class="stats-section-title">All</h4>
+            
+            <!-- Raid Buffs Subsection -->
+            <div class="stats-subsection">
+                <h5 class="stats-subsection-title">Raid Buffs:</h5>
+                <div class="raid-buffs-list" id="raidBuffsList">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

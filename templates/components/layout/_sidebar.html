@@ -6,6 +6,9 @@
         <div class="sidebar-subtitle">{{ players|length }} Players • {{ total_characters }} Characters</div>
     </div>
     
+    <!-- Roster Stats Component -->
+    {% include 'components/ui/_roster_stats.html' %}
+    
     <div class="sidebar-content">
         {% if players and players|length > 0 %}
             {% include 'components/player/_player_list.html' %}

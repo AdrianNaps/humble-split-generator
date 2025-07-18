@@ -68,6 +68,173 @@ html, body {
     background: #777;
 }
 
+/* ===== ROSTER STATS COMPONENT ===== */
+/* Add this section after the .sidebar-content::-webkit-scrollbar-thumb:hover rule (around line 72) */
+
+.roster-stats-container {
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #333;
+    margin: 0;
+}
+
+.roster-stats-header {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.roster-stats-header:hover {
+    background-color: #333;
+}
+
+.roster-stats-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.roster-stats-title i {
+    color: #888;
+}
+
+.roster-stats-header .expand-icon {
+    color: #888;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.roster-stats-header .expand-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.roster-stats-content {
+    background-color: #1a1a1a;
+    border-top: 1px solid #333;
+    transition: max-height 0.3s ease;
+}
+
+.stats-section {
+    padding: 12px 20px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.stats-section:last-child {
+    border-bottom: none;
+}
+
+.stats-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f7fafc;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-subsection {
+    margin-bottom: 16px;
+}
+
+.stats-subsection:last-child {
+    margin-bottom: 0;
+}
+
+.stats-subsection-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #cbd5e0;
+    margin: 0 0 8px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.role-groups-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.role-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.role-group-label {
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+.role-group-value {
+    font-weight: 700;
+    font-size: 14px;
+    color: #4299e1;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.stat-label {
+    color: #a0aec0;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #4299e1;
+}
+
+.raid-buffs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.buff-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.buff-item.placeholder {
+    color: #888;
+    font-style: italic;
+    justify-content: center;
+}
+
+.buff-name {
+    color: #a0aec0;
+}
+
+.buff-count {
+    font-weight: 600;
+    color: #48bb78;
+}
+
 /* ===== PLAYER ITEMS IN SIDEBAR ===== */
 .player-item {
     margin: 4px 12px;
